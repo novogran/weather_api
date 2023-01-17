@@ -6,7 +6,7 @@ import kotlinx.coroutines.runBlocking
 
 class GetWeatherUseCase(private val getWeatherData: GetWeatherData) {
 
-    suspend fun execute(weatherLocationToSearch: String): CommonItem {
+    suspend fun execute(weatherLocationToSearch: String?): CommonItem {
         return try {
             runBlocking(Dispatchers.IO) {
                 async {

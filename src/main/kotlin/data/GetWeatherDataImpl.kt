@@ -15,7 +15,7 @@ class GetWeatherDataImpl(private val client: HttpClient) : GetWeatherData {
         private const val API_KEY = "69e6d334e8c5405fbe4132858231001"
     }
 
-    override suspend fun getWeather(weatherLocationToSearch: String): CommonDataModel {
+    override suspend fun getWeather(weatherLocationToSearch: String?): CommonDataModel {
 
         val response: HttpResponse = client.get {
             url {

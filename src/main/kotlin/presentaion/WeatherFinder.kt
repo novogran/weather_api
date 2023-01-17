@@ -22,7 +22,14 @@ class WeatherFinder {
 
         println(ENTER_TYPE_OF_SEARCH)
 
-        when (readLine()?.toInt()) {
+        when (
+            try {
+                readLine()?.toInt()
+            } catch (e: Exception) {
+                println(INVALID_ENTER)
+                findWeather()
+            }
+        ) {
             1 -> {
                 try {
                     println(ENTER_LATITUDE_COORDINATE)
@@ -30,7 +37,7 @@ class WeatherFinder {
                     println(ENTER_LONGITUDE_COORDINATE)
                     val longitude = readLine()?.toDouble()
                     weatherMonitor("$latitude,$longitude")
-                }catch (e:Exception){
+                } catch (e: Exception) {
                     println(INVALID_ENTER)
                     findWeather()
                 }
@@ -38,7 +45,7 @@ class WeatherFinder {
 
             2 -> {
                 println(ENTER_CITY)
-                val city = readlnOrNull().toString()
+                val city = readLine()
                 weatherMonitor(city)
             }
 
@@ -49,7 +56,7 @@ class WeatherFinder {
         }
     }
 
-    private suspend fun weatherMonitor(weatherLocationToSearch: String) {
+    private suspend fun weatherMonitor(weatherLocationToSearch: String?) {
         do {
             val weatherModel = getWeatherUseCase.execute(weatherLocationToSearch).to()
 
