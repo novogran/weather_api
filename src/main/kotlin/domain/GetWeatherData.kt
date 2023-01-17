@@ -1,7 +1,7 @@
 package domain
 
-import presentaion.LocationInfoModel
+import data.CommonDataModel
 
 interface GetWeatherData {
-    suspend fun getWeather(weatherLocationToSearch: String): LocationInfoModel
+    suspend fun getWeather(weatherLocationToSearch: String): CommonDataModel
 }

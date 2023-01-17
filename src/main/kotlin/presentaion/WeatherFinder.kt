@@ -7,33 +7,43 @@ import kotlinx.coroutines.*
 class WeatherFinder {
 
     companion object {
-        private const val ENTER_LATITUDE_COORDINATE_TEXT = "Введите широту:"
-        private const val ENTER_LONGITUDE_COORDINATE_TEXT = "Введите долготу:"
+        private const val ENTER_LATITUDE_COORDINATE = "Введите широту:"
+        private const val ENTER_LONGITUDE_COORDINATE = "Введите долготу:"
+        private const val ENTER_TYPE_OF_SEARCH = "Выберите тип поиска погоды:\n1 - по координатам\n2 - по городу"
+        private const val INVALID_ENTER = "Неверный ввод"
+        private const val ENTER_CITY = "Введите город:"
     }
 
-    private val getWeatherData = GetWeatherDataImpl()
+    private val serviceLocator = ServiceLocator().getClient()
+    private val getWeatherData = GetWeatherDataImpl(serviceLocator)
     private val getWeatherUseCase = GetWeatherUseCase(getWeatherData)
-    private val inputValidation = InputValidation()
 
     suspend fun findWeather() {
 
-        println("Выберите тип поиска погоды:\n1 - по координатам\n2 - по городу")
+        println(ENTER_TYPE_OF_SEARCH)
 
-        when (inputValidation.checkInput(readlnOrNull())) {
+        when (readLine()?.toInt()) {
             1 -> {
-                val latitude = inputValidation.enterCoordinate(ENTER_LATITUDE_COORDINATE_TEXT)
-                val longitude = inputValidation.enterCoordinate(ENTER_LONGITUDE_COORDINATE_TEXT)
-                weatherMonitor("$latitude,$longitude")
+                try {
+                    println(ENTER_LATITUDE_COORDINATE)
+                    val latitude = readLine()?.toDouble()
+                    println(ENTER_LONGITUDE_COORDINATE)
+                    val longitude = readLine()?.toDouble()
+                    weatherMonitor("$latitude,$longitude")
+                }catch (e:Exception){
+                    println(INVALID_ENTER)
+                    findWeather()
+                }
             }
 
             2 -> {
-                println("Введите город:")
+                println(ENTER_CITY)
                 val city = readlnOrNull().toString()
                 weatherMonitor(city)
             }
 
             else -> {
-                println("Неверный ввод")
+                println(INVALID_ENTER)
                 findWeather()
             }
         }
@@ -41,25 +51,27 @@ class WeatherFinder {
 
     private suspend fun weatherMonitor(weatherLocationToSearch: String) {
         do {
+            val weatherModel = getWeatherUseCase.execute(weatherLocationToSearch).to()
 
-            val locationInfoModel: LocationInfoModel = runBlocking(Dispatchers.IO) {
-                async {
-                    getWeatherUseCase.execute(weatherLocationToSearch)
-                }
-            }.await()
+            if (weatherModel is BaseWeatherModel) {
+                printResultInConsole(weatherModel)
+            } else {
+                println(weatherModel.text())
+                findWeather()
+            }
 
-            printResultInConsole(locationInfoModel)
             delay(15000)
+
         } while (true)
     }
 
-    private fun printResultInConsole(locationInfoModel: LocationInfoModel) {
-        val line = "------------------------------"
+    private fun printResultInConsole(weatherModel: BaseWeatherModel) {
+        val line = "----------------------------------"
         println(
-            "Локация\t\t|\t${locationInfoModel.getLocationName()}\n$line\nСтрана\t\t|\t${
-                locationInfoModel.getCountryName()
-            }\n$line\nТемпература\t|\t${
-                locationInfoModel.getLocationTemperature()
+            "$line\n|\tЛокация\t\t|\t${weatherModel.getLocationName()}\n$line\n|\tСтрана\t\t|\t${
+                weatherModel.getCountryName()
+            }\n$line\n|\tТемпература\t|\t${
+                weatherModel.getLocationTemperature()
             }°C"
         )
     }

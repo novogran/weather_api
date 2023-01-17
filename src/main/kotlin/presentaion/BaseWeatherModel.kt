@@ -1,10 +1,12 @@
 package presentaion
 
-class LocationInfoModel(
+import domain.CommonWeatherModel
+
+class BaseWeatherModel(
     private val locationName: String,
     private val countryName: String,
     private val locationTemperature: Double
-) {
+) : CommonWeatherModel() {
 
     fun getLocationName(): String {
         return locationName
@@ -18,4 +20,5 @@ class LocationInfoModel(
         return locationTemperature
     }
 
+    override fun text() = "$locationName\n$countryName\n$locationTemperature"
 }
