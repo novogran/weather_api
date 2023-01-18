@@ -4,20 +4,20 @@ import Mapper
 import presentaion.FailureWeatherModel
 import presentaion.BaseWeatherModel
 
-sealed class CommonItem : Mapper<CommonWeatherModel> {
+sealed interface CommonItem : Mapper<Any> {
 
-    class Success(
-        private val locationName: String,
-        private val countryName: String,
-        private val locationTemperature: Double
-    ) : CommonItem() {
-        override fun to(): CommonWeatherModel {
+    data class Success(
+        val locationName: String,
+        val countryName: String,
+        val locationTemperature: Double
+    ) : CommonItem {
+        override fun to(): BaseWeatherModel {
             return BaseWeatherModel(locationName, countryName, locationTemperature)
         }
     }
 
-    class Failed(private val failureText: String) : CommonItem() {
-        override fun to(): CommonWeatherModel {
+    data class Failed(val failureText: String) : CommonItem {
+        override fun to(): FailureWeatherModel {
             return FailureWeatherModel(failureText)
         }
     }
