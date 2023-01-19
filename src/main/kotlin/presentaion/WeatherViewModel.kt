@@ -38,12 +38,8 @@ class WeatherViewModel {
             findWeather()
         }
 
-        if (option !in 1..2) {
-            println(INVALID_ENTER)
-            findWeather()
-        }
-
-            val param = if (option == 1) {
+        val param = when (option) {
+            1 -> {
                 try {
                     println(ENTER_LATITUDE_COORDINATE)
                     val latitude = readlnOrNull()?.toDouble()
@@ -54,26 +50,30 @@ class WeatherViewModel {
                     println(INVALID_ENTER)
                     findWeather()
                 }
-            } else {
+            }
+
+            2 -> {
                 println(ENTER_CITY)
                 val city = readln()
                 city
             }
 
-            while (true) {
-                weatherMonitor(param.toString())
-                delay(3000)
+            else -> {
+                println(INVALID_ENTER)
+                findWeather()
             }
+        }
+
+        while (true) {
+            weatherMonitor(param)
+            delay(3000)
+        }
     }
 
     private suspend fun weatherMonitor(weatherLocationToSearch: String) {
         val weatherViewState = try {
             val weatherData = getWeatherUseCase.execute(weatherLocationToSearch)
-            WeatherViewState.Success(
-                weatherData.locationName,
-                weatherData.countryName,
-                weatherData.locationTemperature
-            )
+            WeatherViewState.Success(weatherData.locationName, weatherData.countryName, weatherData.locationTemperature)
         } catch (e: Exception) {
             WeatherViewState.Failed(e.toErrorMessage())
         }
@@ -81,10 +81,13 @@ class WeatherViewModel {
         when (weatherViewState) {
             is WeatherViewState.Success -> {
                 printTableInConsole(weatherViewState)
+//                delay(15000)
+//                weatherMonitor(weatherLocationToSearch)
             }
 
             is WeatherViewState.Failed -> {
                 println(weatherViewState.failureText)
+//                findWeather()
             }
         }
     }
