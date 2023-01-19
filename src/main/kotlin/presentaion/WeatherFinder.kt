@@ -4,10 +4,11 @@ import data.api.WeatherComApi
 import common.AppDispatchers
 import data.mapper.WeatherEntityMapper
 import data.repo.WeatherRepoImpl
-import domain.CommonItem
 import domain.GetWeatherUseCase
+import domain.mapper.CommonItemMapper
 import domain.repo.WeatherRepo
 import kotlinx.coroutines.*
+import presentaion.model.CommonItem
 
 class WeatherFinder {
 
@@ -19,10 +20,10 @@ class WeatherFinder {
         private const val ENTER_CITY = "Введите город:"
     }
 
-    private val httpClient = ServiceLocator().getClient()
+    private val httpClient = HttpClient().getClient()
     private val weatherRepo: WeatherRepo = WeatherRepoImpl(WeatherComApi(httpClient), WeatherEntityMapper())
     private val dispatcherIO = AppDispatchers()
-    private val getWeatherUseCase = GetWeatherUseCase(weatherRepo, dispatcherIO)
+    private val getWeatherUseCase = GetWeatherUseCase(weatherRepo, CommonItemMapper(), dispatcherIO)
 
     suspend fun findWeather() {
 
@@ -51,7 +52,7 @@ class WeatherFinder {
 
             2 -> {
                 println(ENTER_CITY)
-                val city = readlnOrNull()
+                val city = readln()
                 weatherMonitor(city)
             }
 
@@ -62,23 +63,22 @@ class WeatherFinder {
         }
     }
 
-    private suspend fun weatherMonitor(weatherLocationToSearch: String?) {
+    private suspend fun weatherMonitor(weatherLocationToSearch: String) {
         when (val weatherModel = getWeatherUseCase.execute(weatherLocationToSearch)) {
             is CommonItem.Success -> {
-                printTableInConsole(weatherModel.from())
+                printTableInConsole(weatherModel)
                 delay(15000)
                 weatherMonitor(weatherLocationToSearch)
             }
 
             is CommonItem.Failed -> {
-                val failureWeatherModel = weatherModel.from()
-                println(failureWeatherModel.errorText)
+                println(weatherModel.failureText)
                 findWeather()
             }
         }
     }
 
-    private fun printTableInConsole(weatherModel: BaseWeatherModel) {
+    private fun printTableInConsole(weatherModel: CommonItem.Success) {
         val line = "----------------------------------"
         println(
             "$line\n|\tЛокация\t\t|\t${weatherModel.locationName}\n$line\n|\tСтрана\t\t|\t${
