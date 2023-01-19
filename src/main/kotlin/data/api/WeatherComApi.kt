@@ -1,13 +1,15 @@
-package data
+package data.api
 
-import domain.GetWeatherData
+import data.dto.WeatherApiServerModel
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 
-class GetWeatherDataImpl(private val client: HttpClient) : GetWeatherData {
+class WeatherComApi(
+    private val client: HttpClient
+) : WeatherApi {
 
     companion object {
         private const val HOST_URL = "api.weatherapi.com"
@@ -15,7 +17,7 @@ class GetWeatherDataImpl(private val client: HttpClient) : GetWeatherData {
         private const val API_KEY = "69e6d334e8c5405fbe4132858231001"
     }
 
-    override suspend fun getWeather(weatherLocationToSearch: String?): CommonDataModel {
+    override suspend fun getWeather(weatherLocationToSearch: String): WeatherApiServerModel {
 
         val response: HttpResponse = client.get {
             url {
@@ -26,6 +28,6 @@ class GetWeatherDataImpl(private val client: HttpClient) : GetWeatherData {
                 parameter("q", weatherLocationToSearch)
             }
         }
-        return response.body<WeatherApiServerModel>().to()
+        return response.body()
     }
 }

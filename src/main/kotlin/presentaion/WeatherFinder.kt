@@ -1,9 +1,12 @@
 package presentaion
 
-import data.GetWeatherDataImpl
-import domain.AppDispatchers
+import data.api.WeatherComApi
+import common.AppDispatchers
+import data.mapper.WeatherEntityMapper
+import data.repo.WeatherRepoImpl
 import domain.CommonItem
 import domain.GetWeatherUseCase
+import domain.repo.WeatherRepo
 import kotlinx.coroutines.*
 
 class WeatherFinder {
@@ -16,21 +19,23 @@ class WeatherFinder {
         private const val ENTER_CITY = "Введите город:"
     }
 
-    private val serviceLocator = ServiceLocator().getClient()
-    private val getWeatherData = GetWeatherDataImpl(serviceLocator)
+    private val httpClient = ServiceLocator().getClient()
+    private val weatherRepo: WeatherRepo = WeatherRepoImpl(WeatherComApi(httpClient), WeatherEntityMapper())
     private val dispatcherIO = AppDispatchers()
-    private val getWeatherUseCase = GetWeatherUseCase(getWeatherData, dispatcherIO)
+    private val getWeatherUseCase = GetWeatherUseCase(weatherRepo, dispatcherIO)
 
     suspend fun findWeather() {
 
         println(ENTER_TYPE_OF_SEARCH)
 
-        when (try {
+        val option = try {
             readlnOrNull()?.toInt()
         } catch (e: Exception) {
             println(INVALID_ENTER)
             findWeather()
-        }) {
+        }
+
+        when (option) {
             1 -> {
                 try {
                     println(ENTER_LATITUDE_COORDINATE)
@@ -60,13 +65,13 @@ class WeatherFinder {
     private suspend fun weatherMonitor(weatherLocationToSearch: String?) {
         when (val weatherModel = getWeatherUseCase.execute(weatherLocationToSearch)) {
             is CommonItem.Success -> {
-                printTableInConsole(weatherModel.to())
+                printTableInConsole(weatherModel.from())
                 delay(15000)
                 weatherMonitor(weatherLocationToSearch)
             }
 
             is CommonItem.Failed -> {
-                val failureWeatherModel = weatherModel.to()
+                val failureWeatherModel = weatherModel.from()
                 println(failureWeatherModel.errorText)
                 findWeather()
             }

@@ -1,6 +1,5 @@
-package data
+package data.dto
 
-import Mapper
 import kotlinx.serialization.SerialName
 
 @kotlinx.serialization.Serializable
@@ -9,9 +8,4 @@ data class WeatherApiServerModel(
     val locationInfoServerModel: WeatherApiLocationInfoServerModel,
     @SerialName("current")
     val currentInfoServerModel: WeatherApiCurrentInfoServerModel
-) : Mapper<CommonDataModel> {
-    override fun to() = CommonDataModel(
-        locationInfoServerModel.name,
-        locationInfoServerModel.country, currentInfoServerModel.temp
-    )
-}
+)

@@ -11,13 +11,13 @@ sealed interface CommonItem : Mapper<Any> {
         val countryName: String,
         val locationTemperature: Double
     ) : CommonItem {
-        override fun to(): BaseWeatherModel {
+        override fun from(): BaseWeatherModel {
             return BaseWeatherModel(locationName, countryName, locationTemperature)
         }
     }
 
     data class Failed(val failureText: String) : CommonItem {
-        override fun to(): FailureWeatherModel {
+        override fun from(): FailureWeatherModel {
             return FailureWeatherModel(failureText)
         }
     }

@@ -1,3 +1,3 @@
-interface Mapper<R> {
-    fun to(): R
+interface Mapper<F, R> {
+    fun map(from: F): R
 }

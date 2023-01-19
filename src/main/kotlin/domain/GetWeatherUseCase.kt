@@ -1,16 +1,22 @@
 package domain
 
-import kotlinx.coroutines.*
-import kotlin.coroutines.EmptyCoroutineContext
+import common.AppDispatchers
+import domain.repo.WeatherRepo
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
 
-class GetWeatherUseCase(private val getWeatherData: GetWeatherData, private val appDispatchers: AppDispatchers) {
+class GetWeatherUseCase(
+    private val getWeatherData: WeatherRepo,
+    private val appDispatchers: AppDispatchers
+) {
 
-    private val requestScope: CoroutineScope = CoroutineScope(EmptyCoroutineContext)
     suspend fun execute(weatherLocationToSearch: String?): CommonItem {
         return try {
-            requestScope.async(appDispatchers.io) {
-                getWeatherData.getWeather(weatherLocationToSearch)
-            }.await().to()
+            withContext(appDispatchers.io) {
+                async {
+                    getWeatherData.getWeather(weatherLocationToSearch)
+                }.await().from()
+            }
         } catch (e: Exception) {
             CommonItem.Failed(FailureFactory().handle(e))
         }

@@ -1,4 +1,4 @@
-package domain
+package common
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
