@@ -1,13 +1,12 @@
 package presentaion.model
 
-sealed class CommonItem {
+sealed interface WeatherViewState {
 
     data class Success(
         val locationName: String,
         val countryName: String,
         val locationTemperature: Double
-    ) : CommonItem()
+    ) : WeatherViewState
 
-    data class Failed(val failureText: String) : CommonItem() {
-    }
+    data class Failed(val failureText: String) : WeatherViewState
 }

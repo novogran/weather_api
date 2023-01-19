@@ -2,15 +2,17 @@ package presentaion
 
 import data.api.WeatherComApi
 import common.AppDispatchers
+import common.HttpClient
+import common.toErrorMessage
 import data.mapper.WeatherEntityMapper
 import data.repo.WeatherRepoImpl
 import domain.GetWeatherUseCase
-import domain.mapper.CommonItemMapper
+import domain.mapper.WeatherViewDataMapper
 import domain.repo.WeatherRepo
 import kotlinx.coroutines.*
-import presentaion.model.CommonItem
+import presentaion.model.WeatherViewState
 
-class WeatherFinder {
+class WeatherViewModel {
 
     companion object {
         private const val ENTER_LATITUDE_COORDINATE = "Введите широту:"
@@ -23,7 +25,7 @@ class WeatherFinder {
     private val httpClient = HttpClient().getClient()
     private val weatherRepo: WeatherRepo = WeatherRepoImpl(WeatherComApi(httpClient), WeatherEntityMapper())
     private val dispatcherIO = AppDispatchers()
-    private val getWeatherUseCase = GetWeatherUseCase(weatherRepo, CommonItemMapper(), dispatcherIO)
+    private val getWeatherUseCase = GetWeatherUseCase(weatherRepo, WeatherViewDataMapper(), dispatcherIO)
 
     suspend fun findWeather() {
 
@@ -64,21 +66,28 @@ class WeatherFinder {
     }
 
     private suspend fun weatherMonitor(weatherLocationToSearch: String) {
-        when (val weatherModel = getWeatherUseCase.execute(weatherLocationToSearch)) {
-            is CommonItem.Success -> {
-                printTableInConsole(weatherModel)
+        val weatherViewState = try {
+            val weatherData = getWeatherUseCase.execute(weatherLocationToSearch)
+            WeatherViewState.Success(weatherData.locationName, weatherData.countryName, weatherData.locationTemperature)
+        } catch (e: Exception) {
+            WeatherViewState.Failed(e.toErrorMessage())
+        }
+
+        when (weatherViewState) {
+            is WeatherViewState.Success -> {
+                printTableInConsole(weatherViewState)
                 delay(15000)
                 weatherMonitor(weatherLocationToSearch)
             }
 
-            is CommonItem.Failed -> {
-                println(weatherModel.failureText)
+            is WeatherViewState.Failed -> {
+                println(weatherViewState.failureText)
                 findWeather()
             }
         }
     }
 
-    private fun printTableInConsole(weatherModel: CommonItem.Success) {
+    private fun printTableInConsole(weatherModel: WeatherViewState.Success) {
         val line = "----------------------------------"
         println(
             "$line\n|\tЛокация\t\t|\t${weatherModel.locationName}\n$line\n|\tСтрана\t\t|\t${

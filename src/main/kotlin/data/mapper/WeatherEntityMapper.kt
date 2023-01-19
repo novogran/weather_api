@@ -1,6 +1,6 @@
 package data.mapper
 
-import Mapper
+import common.Mapper
 import data.dto.WeatherApiServerModel
 import domain.entity.WeatherEntity
 

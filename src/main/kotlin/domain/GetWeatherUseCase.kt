@@ -1,18 +1,18 @@
 package domain
 
 import common.AppDispatchers
-import domain.mapper.CommonItemMapper
+import domain.mapper.WeatherViewDataMapper
 import domain.repo.WeatherRepo
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
-import presentaion.model.CommonItem
+import presentaion.entity.WeatherViewData
 
 class GetWeatherUseCase(
     private val weatherRepo: WeatherRepo,
-    private val commonItemMapper: CommonItemMapper,
+    private val commonItemMapper: WeatherViewDataMapper,
     private val appDispatchers: AppDispatchers
 ) {
-    suspend fun execute(weatherLocationToSearch: String): CommonItem {
+    suspend fun execute(weatherLocationToSearch: String): WeatherViewData {
 
         val weatherEntity = withContext(appDispatchers.io) {
             async {
