@@ -65,7 +65,7 @@ class WeatherViewModel {
         }
 
         while (true) {
-            weatherMonitor(param)
+            weatherMonitor(param.toString())
             delay(3000)
         }
     }
