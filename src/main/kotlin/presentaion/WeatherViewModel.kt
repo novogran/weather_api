@@ -38,14 +38,14 @@ class WeatherViewModel {
             findWeather()
         }
 
-        when (option) {
+        val param = when (option) {
             1 -> {
                 try {
                     println(ENTER_LATITUDE_COORDINATE)
                     val latitude = readlnOrNull()?.toDouble()
                     println(ENTER_LONGITUDE_COORDINATE)
                     val longitude = readlnOrNull()?.toDouble()
-                    weatherMonitor("$latitude,$longitude")
+                    "$latitude,$longitude"
                 } catch (e: Exception) {
                     println(INVALID_ENTER)
                     findWeather()
@@ -55,13 +55,18 @@ class WeatherViewModel {
             2 -> {
                 println(ENTER_CITY)
                 val city = readln()
-                weatherMonitor(city)
+                city
             }
 
             else -> {
                 println(INVALID_ENTER)
                 findWeather()
             }
+        }
+
+        while (true) {
+            weatherMonitor(param)
+            delay(3000)
         }
     }
 
@@ -76,13 +81,13 @@ class WeatherViewModel {
         when (weatherViewState) {
             is WeatherViewState.Success -> {
                 printTableInConsole(weatherViewState)
-                delay(15000)
-                weatherMonitor(weatherLocationToSearch)
+//                delay(15000)
+//                weatherMonitor(weatherLocationToSearch)
             }
 
             is WeatherViewState.Failed -> {
                 println(weatherViewState.failureText)
-                findWeather()
+//                findWeather()
             }
         }
     }
