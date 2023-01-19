@@ -38,37 +38,42 @@ class WeatherViewModel {
             findWeather()
         }
 
-        when (option) {
-            1 -> {
+        if (option !in 1..2) {
+            println(INVALID_ENTER)
+            findWeather()
+        }
+
+            val param = if (option == 1) {
                 try {
                     println(ENTER_LATITUDE_COORDINATE)
                     val latitude = readlnOrNull()?.toDouble()
                     println(ENTER_LONGITUDE_COORDINATE)
                     val longitude = readlnOrNull()?.toDouble()
-                    weatherMonitor("$latitude,$longitude")
+                    "$latitude,$longitude"
                 } catch (e: Exception) {
                     println(INVALID_ENTER)
                     findWeather()
                 }
-            }
-
-            2 -> {
+            } else {
                 println(ENTER_CITY)
                 val city = readln()
-                weatherMonitor(city)
+                city
             }
 
-            else -> {
-                println(INVALID_ENTER)
-                findWeather()
+            while (true) {
+                weatherMonitor(param.toString())
+                delay(3000)
             }
-        }
     }
 
     private suspend fun weatherMonitor(weatherLocationToSearch: String) {
         val weatherViewState = try {
             val weatherData = getWeatherUseCase.execute(weatherLocationToSearch)
-            WeatherViewState.Success(weatherData.locationName, weatherData.countryName, weatherData.locationTemperature)
+            WeatherViewState.Success(
+                weatherData.locationName,
+                weatherData.countryName,
+                weatherData.locationTemperature
+            )
         } catch (e: Exception) {
             WeatherViewState.Failed(e.toErrorMessage())
         }
@@ -76,13 +81,10 @@ class WeatherViewModel {
         when (weatherViewState) {
             is WeatherViewState.Success -> {
                 printTableInConsole(weatherViewState)
-                delay(15000)
-                weatherMonitor(weatherLocationToSearch)
             }
 
             is WeatherViewState.Failed -> {
                 println(weatherViewState.failureText)
-                findWeather()
             }
         }
     }
