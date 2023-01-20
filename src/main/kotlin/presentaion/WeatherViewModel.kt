@@ -1,16 +1,11 @@
 package presentaion
 
-import data.api.WeatherComApi
-import common.AppDispatchers
-import common.HttpClient
+import common.DaggerAppComponent
 import common.toErrorMessage
-import data.mapper.WeatherEntityMapper
-import data.repo.WeatherRepoImpl
 import domain.GetWeatherUseCase
-import domain.mapper.WeatherViewDataMapper
-import domain.repo.WeatherRepo
 import kotlinx.coroutines.*
 import presentaion.model.WeatherViewState
+import javax.inject.Inject
 
 class WeatherViewModel {
 
@@ -22,10 +17,10 @@ class WeatherViewModel {
         private const val ENTER_CITY = "Введите город:"
     }
 
-    private val httpClient = HttpClient().getClient()
-    private val weatherRepo: WeatherRepo = WeatherRepoImpl(WeatherComApi(httpClient), WeatherEntityMapper())
-    private val dispatcherIO = AppDispatchers()
-    private val getWeatherUseCase = GetWeatherUseCase(weatherRepo, WeatherViewDataMapper(), dispatcherIO)
+    private val appComponent = DaggerAppComponent.create()
+
+    @Inject
+    lateinit var getWeatherUseCase: GetWeatherUseCase
 
     suspend fun findWeather() {
 
@@ -69,6 +64,7 @@ class WeatherViewModel {
 
     private suspend fun weatherMonitor(weatherLocationToSearch: String) {
         val weatherViewState = try {
+            appComponent.inject(this)
             val weatherData = getWeatherUseCase.execute(weatherLocationToSearch)
             WeatherViewState.Success(weatherData.locationName, weatherData.countryName, weatherData.locationTemperature)
         } catch (e: Exception) {

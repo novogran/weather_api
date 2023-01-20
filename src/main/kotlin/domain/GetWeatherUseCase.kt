@@ -10,11 +10,11 @@ import presentaion.entity.WeatherViewData
 class GetWeatherUseCase(
     private val weatherRepo: WeatherRepo,
     private val commonItemMapper: WeatherViewDataMapper,
-    private val appDispatchers: AppDispatchers
+    private val dispatcher: AppDispatchers
 ) {
     suspend fun execute(weatherLocationToSearch: String): WeatherViewData {
 
-        val weatherEntity = withContext(appDispatchers.io) {
+        val weatherEntity = withContext(dispatcher.io) {
             async {
                 weatherRepo.getWeather(weatherLocationToSearch)
             }.await()

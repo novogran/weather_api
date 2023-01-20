@@ -11,10 +11,5 @@ class WeatherViewDataMapper : Mapper<WeatherEntity, WeatherViewData> {
             countryName = from.countryName,
             locationTemperature = from.locationTemperature
         )
-        //        return try {
-//            WeatherViewState.Success(from.locationName, from.countryName, from.locationTemperature)
-//        } catch (e: Exception) {
-//            WeatherViewState.Failed(FailureFactory().handle(e))
-//        }
     }
 }
