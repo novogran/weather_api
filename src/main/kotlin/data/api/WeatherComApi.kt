@@ -6,8 +6,9 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import javax.inject.Inject
 
-class WeatherComApi(
+class WeatherComApi @Inject constructor(
     private val client: HttpClient
 ) : WeatherApi {
 
