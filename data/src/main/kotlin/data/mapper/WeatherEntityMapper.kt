@@ -1,6 +1,6 @@
 package data.mapper
 
-import common.Mapper
+import data.common.Mapper
 import data.dto.WeatherApiServerModel
 import domain.entity.WeatherEntity
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package domain.mapper
+package presentaion.mapper
 
 import common.Mapper
 import domain.entity.WeatherEntity
