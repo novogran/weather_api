@@ -1,6 +1,5 @@
 package common
 
-import GetWeatherUseCase
 import dagger.Binds
 import dagger.Component
 import dagger.Module
@@ -8,7 +7,6 @@ import dagger.Provides
 import data.api.WeatherApi
 import data.api.WeatherComApi
 import data.repo.WeatherRepoImpl
-import domain.GetWeatherUseCaseImpl
 import domain.repo.WeatherRepo
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.*
@@ -47,8 +45,5 @@ interface AppBindModule {
 
     @Binds
     fun bindWeatherRepoImpl_to_WeatherRepo(weatherRepoImpl: WeatherRepoImpl): WeatherRepo
-
-    @Binds
-    fun bindGetWeatherUseCaseImpl_to_GetWeatherUseCase(getWeatherUseCaseImpl: GetWeatherUseCaseImpl): GetWeatherUseCase
 }
 

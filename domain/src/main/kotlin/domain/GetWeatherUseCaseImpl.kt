@@ -1,25 +1,21 @@
 package domain
 
-import GetWeatherUseCase
-import domain.mapper.WeatherViewDataMapper
+import domain.entity.WeatherEntity
 import domain.repo.WeatherRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
-import presentaion.entity.WeatherViewData
 import javax.inject.Inject
 
 class GetWeatherUseCaseImpl @Inject constructor(
     private val weatherRepo: WeatherRepo,
-    private val commonItemMapper: WeatherViewDataMapper,
-): GetWeatherUseCase {
-    override suspend fun execute(weatherLocationToSearch: String): WeatherViewData {
+) {
+    suspend fun execute(weatherLocationToSearch: String): WeatherEntity {
 
-        val weatherEntity = withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
             async {
                 weatherRepo.getWeather(weatherLocationToSearch)
             }.await()
         }
-        return commonItemMapper.map(weatherEntity)
     }
 }

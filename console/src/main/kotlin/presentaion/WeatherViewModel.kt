@@ -1,9 +1,10 @@
 package presentaion
 
-import GetWeatherUseCase
 import common.DaggerAppComponent
 import common.toErrorMessage
+import domain.GetWeatherUseCaseImpl
 import kotlinx.coroutines.*
+import presentaion.mapper.WeatherViewDataMapper
 import presentaion.model.WeatherViewState
 import javax.inject.Inject
 
@@ -20,7 +21,7 @@ class WeatherViewModel {
     private val appComponent = DaggerAppComponent.create()
 
     @Inject
-    lateinit var getWeatherUseCase: GetWeatherUseCase
+    lateinit var getWeatherUseCase: GetWeatherUseCaseImpl
 
     suspend fun findWeather() {
 
@@ -65,7 +66,8 @@ class WeatherViewModel {
     private suspend fun weatherMonitor(weatherLocationToSearch: String) {
         val weatherViewState = try {
             appComponent.inject(this)
-            val weatherData = getWeatherUseCase.execute(weatherLocationToSearch)
+            val weatherEntity = getWeatherUseCase.execute(weatherLocationToSearch)
+            val weatherData = WeatherViewDataMapper().map(weatherEntity)
             WeatherViewState.Success(weatherData.locationName, weatherData.countryName, weatherData.locationTemperature)
         } catch (e: Exception) {
             WeatherViewState.Failed(e.toErrorMessage())

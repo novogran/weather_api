@@ -12,7 +12,6 @@ val dagger_version = "2.44.2"
 
 dependencies {
     implementation(project(":domain"))
-    implementation(project(":console"))
     implementation("io.ktor:ktor-client-core:$ktor_version")
     implementation("io.ktor:ktor-client-cio:$ktor_version")
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")

@@ -11,7 +11,6 @@ val ktor_version: String by project
 val dagger_version = "2.44.2"
 
 dependencies {
-    implementation(project(":console"))
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
     implementation("com.google.dagger:dagger:$dagger_version")
     kapt("com.google.dagger:dagger-compiler:$dagger_version")
