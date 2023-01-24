@@ -1,5 +1,6 @@
 package domain
 
+import GetWeatherUseCase
 import domain.mapper.WeatherViewDataMapper
 import domain.repo.WeatherRepo
 import kotlinx.coroutines.Dispatchers
@@ -8,11 +9,11 @@ import kotlinx.coroutines.withContext
 import presentaion.entity.WeatherViewData
 import javax.inject.Inject
 
-class GetWeatherUseCase @Inject constructor(
+class GetWeatherUseCaseImpl @Inject constructor(
     private val weatherRepo: WeatherRepo,
     private val commonItemMapper: WeatherViewDataMapper,
-) {
-    suspend fun execute(weatherLocationToSearch: String): WeatherViewData {
+): GetWeatherUseCase {
+    override suspend fun execute(weatherLocationToSearch: String): WeatherViewData {
 
         val weatherEntity = withContext(Dispatchers.IO) {
             async {
