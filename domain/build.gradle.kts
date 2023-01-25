@@ -1,13 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.7.21"
-    application
-    kotlin("plugin.serialization").version("1.8.0")
-    kotlin("kapt") version "1.7.21"
+    id("org.jetbrains.kotlin.jvm")
+    id("org.jetbrains.kotlin.plugin.serialization")
+    id("org.jetbrains.kotlin.kapt")
 }
 
-val ktor_version: String by project
+val ktor_version = "2.2.2"
 val dagger_version = "2.44.2"
 
 dependencies {
@@ -15,9 +14,7 @@ dependencies {
     implementation("com.google.dagger:dagger:$dagger_version")
     kapt("com.google.dagger:dagger-compiler:$dagger_version")
 }
-repositories {
-    mavenCentral()
-}
+
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
