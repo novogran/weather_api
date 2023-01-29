@@ -1,4 +1,4 @@
-package common
+package com.example.weather_api.presentaion.common
 
 import java.io.IOException
 import java.nio.channels.UnresolvedAddressException

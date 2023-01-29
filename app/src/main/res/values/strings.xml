@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">weather_api</string>
+    <string name="app_name">Weather Api</string>
+    <string name="get_weather_button_text">Get Weather</string>
+    <string name="location_edit_text_hint">Введите координаты или город для поиска города</string>
 </resources>

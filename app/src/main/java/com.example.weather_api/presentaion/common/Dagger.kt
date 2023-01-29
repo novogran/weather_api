@@ -1,5 +1,6 @@
-package common
+package com.example.weather_api.presentaion.common
 
+import com.example.weather_api.presentaion.view_model.MainViewModel
 import dagger.Binds
 import dagger.Component
 import dagger.Module
@@ -13,12 +14,10 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
-import presentaion.WeatherViewModel
-
 
 @Component(modules = [AppModule::class])
-interface AppComponent {
-    fun inject(weatherViewModel: WeatherViewModel)
+interface AppComponent{
+    fun inject(mainViewModel: MainViewModel)
 }
 
 @Module(includes = [AppBindModule::class, NetworkModule::class])

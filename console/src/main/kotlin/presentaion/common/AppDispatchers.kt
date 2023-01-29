@@ -1,4 +1,4 @@
-package common
+package presentaion.common
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

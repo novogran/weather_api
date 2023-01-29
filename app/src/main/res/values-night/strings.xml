@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="location_edit_text_hint">Введите координаты или город для поиска</string>
+</resources>

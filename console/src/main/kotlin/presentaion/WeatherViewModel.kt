@@ -1,9 +1,9 @@
 package presentaion
 
-import common.DaggerAppComponent
-import common.toErrorMessage
 import domain.GetWeatherUseCaseImpl
 import kotlinx.coroutines.*
+import presentaion.common.DaggerAppComponent
+import presentaion.common.toErrorMessage
 import presentaion.mapper.WeatherViewDataMapper
 import presentaion.model.WeatherViewState
 import javax.inject.Inject
