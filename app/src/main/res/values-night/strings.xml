@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="location_edit_text_hint">Введите координаты или город для поиска</string>
+    <string name="location_edit_text_hint">ex.\\tMinsk\\tor\\t55.3,\\t44.3</string>
 </resources>

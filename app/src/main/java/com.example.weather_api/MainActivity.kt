@@ -14,7 +14,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.weather_api.presentaion.view_model.MainViewModel
 import kotlinx.coroutines.launch
 import com.example.weather_api.presentaion.model.WeatherViewState
-import kotlinx.coroutines.plus
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
 
@@ -37,7 +38,8 @@ class MainActivity : AppCompatActivity() {
                     countryTextView.setText(R.string.COUNTRY_TEXT)
                     temperatureTextView.setText(R.string.TEMPERATURE_TEXT)
                     if (it is WeatherViewState.Failed) {
-                        showFailToast(it.failureText)
+                        Toast.makeText(this@MainActivity, it.failureText, Toast.LENGTH_SHORT)
+                            .show()
                     } else {
                         it as WeatherViewState.Success
 
@@ -53,11 +55,6 @@ class MainActivity : AppCompatActivity() {
             vm.load(weatherLocationToSearch = editText.text.toString())
             Log.d("EDIT_TEXT_VALUE", editText.text.toString())
         }
-    }
-
-    private fun showFailToast(errorText: String) {
-        Toast.makeText(this@MainActivity, errorText, Toast.LENGTH_SHORT)
-            .show()
     }
 }
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="get_weather_button_text">Узнать погоду</string>
+    <string name="location_edit_text_hint">"пр. Минск или 55.3, 44.3"</string>
+    <string name="LOCATION_TEXT">Место:\t</string>
+    <string name="COUNTRY_TEXT">Страна:\t</string>
+    <string name="TEMPERATURE_TEXT">Температура:\t</string>
+</resources>

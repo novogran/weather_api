@@ -1,9 +1,8 @@
 <resources>
-    <string name="app_name">Weather\tApi</string>
-    <string name="get_weather_button_text">Get\tWeather</string>
-    <string name="location_edit_text_hint">e.x. Minsk(Минск) or 55.3, 44.3</string>
-    <string name="LOCATION_TEXT">Место:\t</string>
-    <string name="COUNTRY_TEXT">Страна:\t</string>
-    <string name="TEMPERATURE_ICON"></string>
-    <string name="TEMPERATURE_TEXT">Температура:\t</string>
+    <string name="app_name" translatable="false">Weather Api</string>
+    <string name="get_weather_button_text">Get Weather</string>
+    <string name="location_edit_text_hint">ex. Minsk or 55.3, 44.3</string>
+    <string name="LOCATION_TEXT">Location:\t</string>
+    <string name="COUNTRY_TEXT">Country:\t</string>
+    <string name="TEMPERATURE_TEXT">Temperature:\t</string>
 </resources>
