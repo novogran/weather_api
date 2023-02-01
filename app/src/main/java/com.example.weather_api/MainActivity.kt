@@ -1,6 +1,5 @@
 package com.example.weather_api
 
-import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -13,22 +12,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.weather_api.presentaion.view_model.MainViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import presentaion.mapper.WeatherViewDataMapper
-import presentaion.model.WeatherViewState
+import com.example.weather_api.presentaion.model.WeatherViewState
+import kotlinx.coroutines.plus
 
 class MainActivity : AppCompatActivity() {
 
-    private companion object {
-        private const val LOCATION_TEXT = "Место: "
-        private const val COUNTRY_TEXT = "Страна: "
-        private const val TEMPERATURE_ICON = " °C"
-        private const val TEMPERATURE_TEXT = "Температура: "
-    }
-
-    @SuppressLint("ShowToast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -44,18 +33,18 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             lifecycle.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 vm.weatherStateFlow.collect {
-                    when (it) {
-                        is WeatherViewState.Success -> {
-                            locationTextView.text = LOCATION_TEXT + it.locationName
-                            countryTextView.text = COUNTRY_TEXT + it.countryName
-                            temperatureTextView.text = TEMPERATURE_TEXT +
-                                    it.locationTemperature.toString() + TEMPERATURE_ICON
-                        }
-                        is WeatherViewState.Failed -> {
-                            Toast.makeText(this@MainActivity, it.failureText, Toast.LENGTH_SHORT).show()
-                        }
-                    }
+                    locationTextView.setText(R.string.LOCATION_TEXT)
+                    countryTextView.setText(R.string.COUNTRY_TEXT)
+                    temperatureTextView.setText(R.string.TEMPERATURE_TEXT)
+                    if (it is WeatherViewState.Failed) {
+                        showFailToast(it.failureText)
+                    } else {
+                        it as WeatherViewState.Success
 
+                        locationTextView.append(it.locationName)
+                        countryTextView.append(it.countryName)
+                        temperatureTextView.append(it.locationTemperature.toString().plus("\t°C"))
+                    }
                 }
             }
         }
@@ -64,6 +53,11 @@ class MainActivity : AppCompatActivity() {
             vm.load(weatherLocationToSearch = editText.text.toString())
             Log.d("EDIT_TEXT_VALUE", editText.text.toString())
         }
+    }
+
+    private fun showFailToast(errorText: String) {
+        Toast.makeText(this@MainActivity, errorText, Toast.LENGTH_SHORT)
+            .show()
     }
 }
 

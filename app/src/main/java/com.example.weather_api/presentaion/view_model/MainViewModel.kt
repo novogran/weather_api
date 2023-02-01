@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import presentaion.mapper.WeatherViewDataMapper
-import presentaion.model.WeatherViewState
+import com.example.weather_api.presentaion.model.WeatherViewState
 import javax.inject.Inject
 
 class MainViewModel : ViewModel() {
@@ -22,7 +22,7 @@ class MainViewModel : ViewModel() {
     lateinit var getWeatherUseCase: GetWeatherUseCaseImpl
 
     private var weatherMutableStateFlow =
-        MutableStateFlow<WeatherViewState>(WeatherViewState.Success("","", 0.0))
+        MutableStateFlow<WeatherViewState>(WeatherViewState.Success())
 
     val weatherStateFlow: StateFlow<WeatherViewState> =
         weatherMutableStateFlow.asStateFlow()
