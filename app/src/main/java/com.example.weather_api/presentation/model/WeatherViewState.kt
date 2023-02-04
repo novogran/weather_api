@@ -1,4 +1,4 @@
-package com.example.weather_api.presentaion.model
+package com.example.weather_api.presentation.model
 
 sealed interface WeatherViewState {
 
