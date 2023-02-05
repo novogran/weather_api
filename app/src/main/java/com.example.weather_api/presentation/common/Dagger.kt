@@ -1,6 +1,6 @@
-package com.example.weather_api.presentaion.common
+package com.example.weather_api.presentation.common
 
-import com.example.weather_api.presentaion.view_model.MainViewModel
+import com.example.weather_api.presentation.view_model.MainViewModel
 import dagger.Binds
 import dagger.Component
 import dagger.Module
