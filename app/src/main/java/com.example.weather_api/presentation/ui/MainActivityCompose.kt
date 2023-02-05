@@ -1,6 +1,7 @@
 package com.example.weather_api.presentation.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,7 +19,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.weather_api.R
 import com.example.weather_api.presentation.model.WeatherViewState
 import com.example.weather_api.presentation.view_model.MainViewModel
-import com.example.weather_api.ui.theme.Weather_apiTheme
+import com.example.weather_api.presentation.ui.theme.Weather_apiTheme
 
 class MainActivityCompose : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,14 +47,21 @@ fun LocationInfo() {
     }
 
     val uiState by state.weatherStateFlow.collectAsStateWithLifecycle(Lifecycle.State.CREATED)
+    state.weatherStateFlow.
+
+    Log.d("uiState",uiState.toString())
 
     if (uiState is WeatherViewState.Failed) {
-        Toast.makeText(LocalContext.current, (uiState as WeatherViewState.Failed).failureText, Toast.LENGTH_SHORT)
+        Toast.makeText(
+            LocalContext.current,
+            (uiState as WeatherViewState.Failed).failureText,
+            Toast.LENGTH_SHORT
+        )
             .show()
     } else {
-
         Column {
             val data = uiState as WeatherViewState.Success
+            Log.d("DATA",data.toString())
             Text(text = "${R.string.LOCATION_TEXT} ${data.locationName}")
             Text(text = "${R.string.COUNTRY_TEXT} ${data.countryName}")
             Text(text = "${R.string.TEMPERATURE_TEXT} ${data.locationTemperature} °C")

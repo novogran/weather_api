@@ -11,10 +11,10 @@ val dagger_version = "2.44.2"
 
 dependencies {
     implementation(project(":domain"))
-    implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation("io.ktor:ktor-client-cio:$ktor_version")
-    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
+    implementation("io.ktor:ktor-client-core:2.2.3")
+    implementation("io.ktor:ktor-client-cio:2.2.3")
+    implementation("io.ktor:ktor-client-content-negotiation:2.2.3")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.3")
     implementation("com.google.dagger:dagger:$dagger_version")
     kapt("com.google.dagger:dagger-compiler:$dagger_version")
 }

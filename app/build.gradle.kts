@@ -17,7 +17,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
-            useSupportLibrary = true
         }
     }
 
@@ -56,8 +55,16 @@ val dagger_version = "2.44.2"
 dependencies {
     implementation(project(":domain"))
     implementation(project(":data"))
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version")
+    constraints {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.0") {
+            because("kotlin-stdlib-jdk7 is now a part of kotlin-stdlib")
+        }
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.0") {
+            because("kotlin-stdlib-jdk8 is now a part of kotlin-stdlib")
+        }
+    }
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0-alpha05")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.0-alpha05")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha05")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.activity:activity-compose:1.6.1")
@@ -66,17 +73,17 @@ dependencies {
     implementation("com.google.android.material:material:1.8.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.google.dagger:dagger:$dagger_version")
-    implementation("androidx.compose.ui:ui:${rootProject.extra["compose_ui_version"]}")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:${rootProject.extra["compose_ui_version"]}")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:${rootProject.extra["compose_ui_version"]}")
+    implementation("androidx.compose.ui:ui:1.3.3")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.3.3")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.3.3")
     kapt("com.google.dagger:dagger-compiler:$dagger_version")
-    implementation("io.ktor:ktor-client-core:$ktor_version")
-    implementation("io.ktor:ktor-client-cio:$ktor_version")
-    implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")
-    implementation ("androidx.compose.ui:ui-tooling-preview:1.3.3")
+    implementation("io.ktor:ktor-client-core:2.2.3")
+    implementation("io.ktor:ktor-client-cio:2.2.3")
+    implementation("io.ktor:ktor-client-content-negotiation:2.2.3")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.2.3")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.3.3")
     testImplementation("junit:junit:4.13.2")
-    debugImplementation ("androidx.compose.ui:ui-tooling:1.3.3")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.3.3")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
