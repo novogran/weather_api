@@ -1,6 +1,6 @@
 package presentaion.mapper
 
-import com.example.weather_api.presentation.common.Mapper
+import com.example.weather_api.presentaion.common.Mapper
 import domain.entity.WeatherEntity
 import presentaion.entity.WeatherViewData
 import javax.inject.Inject
