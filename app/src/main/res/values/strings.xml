@@ -5,5 +5,4 @@
     <string name="LOCATION_TEXT">Location:\t</string>
     <string name="COUNTRY_TEXT">Country:\t</string>
     <string name="TEMPERATURE_TEXT">Temperature:\t</string>
-    <string name="title_activity_main">MainActivity</string>
 </resources>
