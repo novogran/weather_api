@@ -4,19 +4,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weather_api.presentation.common.DaggerAppComponent
 import com.example.weather_api.presentation.common.toErrorMessage
+import com.example.weather_api.presentation.model.WeatherViewState
 import domain.GetWeatherUseCaseImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import presentaion.mapper.WeatherViewDataMapper
-import com.example.weather_api.presentation.model.WeatherViewState
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
-class MainViewModel : ViewModel() {
+class MainViewModel: BaseViewModel, ViewModel() {
 
-    val appComponent = DaggerAppComponent.create()
+    private val appComponent = DaggerAppComponent.create()
 
     @Inject
     lateinit var getWeatherUseCase: GetWeatherUseCaseImpl
@@ -27,8 +27,7 @@ class MainViewModel : ViewModel() {
     val weatherStateFlow: StateFlow<WeatherViewState> =
         weatherMutableStateFlow.asStateFlow()
 
-
-    fun load(weatherLocationToSearch: String) {
+    override fun load(weatherLocationToSearch: String) {
         appComponent.inject(this)
         viewModelScope.launch(Dispatchers.IO) {
             weatherMutableStateFlow.value = try {
@@ -42,7 +41,7 @@ class MainViewModel : ViewModel() {
             } catch (e: Exception) {
                 WeatherViewState.Failed(e.toErrorMessage())
             }
-
         }
     }
 }
+

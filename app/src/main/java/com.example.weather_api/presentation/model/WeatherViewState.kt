@@ -13,6 +13,4 @@ sealed interface WeatherViewState {
 
         override fun hashCode(): Int = failureText.hashCode()
     }
-
-
 }

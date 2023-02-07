@@ -1,27 +1,31 @@
 package com.example.weather_api.presentation.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.weather_api.R
 import com.example.weather_api.presentation.model.WeatherViewState
 import com.example.weather_api.presentation.view_model.MainViewModel
 import com.example.weather_api.presentation.ui.theme.Weather_apiTheme
+import com.example.weather_api.presentation.view_model.BaseViewModel
 
 class MainActivityCompose : ComponentActivity() {
+
+    private val vm: MainViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -31,25 +35,17 @@ class MainActivityCompose : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    LocationInfo()
+                    LocationInfo(vm)
                 }
             }
         }
     }
 }
 
-
 @Composable
-fun LocationInfo() {
+fun LocationInfo(viewModel: BaseViewModel) {
 
-    val state = remember {
-        MainViewModel()
-    }
-
-    val uiState by state.weatherStateFlow.collectAsStateWithLifecycle(Lifecycle.State.CREATED)
-    state.weatherStateFlow.
-
-    Log.d("uiState",uiState.toString())
+    val uiState: WeatherViewState by (viewModel as MainViewModel).weatherStateFlow.collectAsStateWithLifecycle()
 
     if (uiState is WeatherViewState.Failed) {
         Toast.makeText(
@@ -59,12 +55,16 @@ fun LocationInfo() {
         )
             .show()
     } else {
-        Column {
-            val data = uiState as WeatherViewState.Success
-            Log.d("DATA",data.toString())
-            Text(text = "${R.string.LOCATION_TEXT} ${data.locationName}")
-            Text(text = "${R.string.COUNTRY_TEXT} ${data.countryName}")
-            Text(text = "${R.string.TEMPERATURE_TEXT} ${data.locationTemperature} °C")
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
+            val weatherInfo = uiState as WeatherViewState.Success
+            Text(
+                text = stringResource(id = R.string.LOCATION_TEXT) + weatherInfo.locationName,
+            )
+            Text(text = stringResource(id = R.string.COUNTRY_TEXT) + weatherInfo.countryName)
+            Text(text = stringResource(id = R.string.TEMPERATURE_TEXT) + weatherInfo.locationTemperature + " °C")
 
             var text by remember {
                 mutableStateOf("")
@@ -73,11 +73,15 @@ fun LocationInfo() {
             TextField(
                 value = text,
                 onValueChange = { text = it },
-                label = { Text(text = "Введите координаты") })
+                label = { Text(text = "Введите координаты") },
+            )
 
-            Button(onClick = {
-                state.load(weatherLocationToSearch = text)
-            }, shape = RoundedCornerShape(20.dp)) {
+            Button(
+                onClick = {
+                    viewModel.load(text)
+                },
+                shape = RoundedCornerShape(20.dp),
+            ) {
             }
         }
     }
@@ -87,6 +91,6 @@ fun LocationInfo() {
 @Composable
 fun DefaultPreview() {
     Weather_apiTheme {
-        LocationInfo()
+//        LocationInfo(MockViewModel(WeatherViewState.Success()))
     }
 }
